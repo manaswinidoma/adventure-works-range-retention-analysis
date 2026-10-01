@@ -24,7 +24,9 @@ Tables used:
     - gold.fact_sales
     - gold.dim_products
 Notes:
-    - Only products sold at least once appear (Components were never sold).
+    - Only products sold at least once appear: 130 of the 295 catalogue products.
+      The 165 never sold are all 134 Components (7 have no category) plus
+      9 Bikes, 15 Clothing and 7 Accessories products.
     - Order lines with invalid (NULL) order dates are excluded.
     - Recency is measured from the last order date in the data (28 Jan 2014),
       not today's date.

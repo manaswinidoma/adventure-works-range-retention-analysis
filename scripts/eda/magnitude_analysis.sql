@@ -81,3 +81,14 @@ LEFT JOIN gold.dim_customers AS c
 ON f.customer_key=c.customer_key
 GROUP BY c.country
 ORDER BY 2 DESC;
+
+--Find the number of catalogue products never sold, by category
+SELECT
+	COALESCE(p.category, 'No category') AS category,
+	COUNT(*) AS products_never_sold
+FROM gold.dim_products p
+LEFT JOIN gold.report_products r
+	ON p.product_key = r.product_key
+WHERE r.product_key IS NULL
+GROUP BY 1
+ORDER BY 2 DESC;
