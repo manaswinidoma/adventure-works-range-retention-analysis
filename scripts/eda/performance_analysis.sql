@@ -1,7 +1,22 @@
---Compare current value with target value.
---Helps measure success and compare performance.
+/*
+===============================================================================
+Performance Analysis
+===============================================================================
+Purpose:
+    - Analyses yearly sales for each product, comparing each year with the
+      product's own average and with the previous year (year-on-year).
+Tables used:
+    - gold.fact_sales
+    - gold.dim_products
+Notes:
+    - Order lines with invalid (NULL) order dates are excluded.
+    - 2010 (Dec only) and 2014 (Jan only) are partial years, so year-on-year
+      changes involving those years should be read with caution.
+    - A product's first year shows 'No Change' as there is no prior year.
+===============================================================================
+*/
 
---Anlayse the yearly performance of products by comparing
+--Analyse the yearly performance of products by comparing
 --each product's sales to both its average sales performance
 --and the previous year's sales
 WITH yearly_product_sales AS (
@@ -38,4 +53,4 @@ CASE
 	ELSE 'Avg'
 END avg_change
 FROM yearly_product_sales
-ORDER BY product_name,order_year
+ORDER BY product_name,order_year;

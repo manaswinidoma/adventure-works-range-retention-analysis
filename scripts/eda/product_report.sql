@@ -3,7 +3,7 @@
 Product Report
 ===============================================================================
 Purpose:
-    - This report consolidates key product metrics and behaviors.
+    - This report consolidates key product metrics and behaviours.
 
 Highlights:
     1. Gathers essential fields such as product name, category, subcategory, and cost.
@@ -21,7 +21,7 @@ Highlights:
 ===============================================================================
 */
 
-DROP VIEW  IF EXISTS gold.report_products;
+DROP VIEW IF EXISTS gold.report_products;
 CREATE VIEW gold.report_products AS
 
 WITH base_query AS (
@@ -56,7 +56,7 @@ SELECT
 	COUNT(DISTINCT customer_key) AS total_customers,
     SUM(sales_amount) AS total_sales,
     SUM(quantity) AS total_quantity,
-	ROUND(AVG(sales_amount / COALESCE(quantity, 0)),2) AS avg_selling_price
+    ROUND(AVG(1.0 * sales_amount / NULLIF(quantity, 0)), 2)
 FROM base_query
 
 GROUP BY
@@ -74,7 +74,7 @@ SELECT
 	subcategory,
 	cost,
 	last_sale_date,
-	EXTRACT (YEAR FROM AGE(CURRENT_DATE,last_sale_date))*12 + EXTRACT (month FROM AGE(CURRENT_DATE,last_sale_date)) AS recency,
+	EXTRACT (YEAR FROM AGE((SELECT MAX(order_date) FROM gold.fact_sales),last_sale_date))*12 + EXTRACT (month FROM AGE((SELECT MAX(order_date) FROM gold.fact_sales),last_sale_date)) AS recency,
 	CASE
 		WHEN total_sales > 50000 THEN 'High-Performer'
 		WHEN total_sales >= 10000 THEN 'Mid-Range'
@@ -89,13 +89,13 @@ SELECT
 	-- Average Order Revenue (AOR)
 	CASE 
 		WHEN total_orders = 0 THEN 0
-		ELSE total_sales / total_orders
+		ELSE ROUND( 1.0 * total_sales / total_orders, 2 )
 	END AS avg_order_revenue,
 
 	-- Average Monthly Revenue
 	CASE
 		WHEN lifespan = 0 THEN total_sales
-		ELSE ROUND(total_sales / lifespan,2)
+		ELSE ROUND( 1.0 * total_sales / lifespan,2)
 	END AS avg_monthly_revenue
 
-FROM product_aggregations 
+FROM product_aggregations ;

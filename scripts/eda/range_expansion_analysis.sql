@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-Range Expansion Analysis (Business Question 3)
+Range Expansion Analysis
 ===============================================================================
 Purpose:
     - Did adding Accessories & Clothing bring in customers who return or buy bikes?
@@ -11,7 +11,6 @@ Notes:
     - Data ends Jan 2014: 2013-14 customers have had at most ~13 months to return.
 ===============================================================================
 */
-
 
 --when did each category start selling? (first recorded sale)
 SELECT p.category, 
@@ -47,7 +46,9 @@ ORDER BY 1;
 WITH first_orders AS (
 	SELECT
 	customer_key,
-	MIN(order_date) AS first_order_date
+	MIN(order_date) AS first_order_date,
+	COUNT(DISTINCT order_number) AS total_orders,
+	SUM(sales_amount) AS total_revenue
 	FROM gold.fact_sales
 	WHERE order_date IS NOT NULL
 	GROUP BY customer_key
@@ -56,6 +57,8 @@ WITH first_orders AS (
 	SELECT
 	fo.customer_key,
 	fo.first_order_date,
+	fo.total_orders,
+	fo.total_revenue,  
 	CASE
 		WHEN MAX(CASE WHEN p.category = 'Bikes' THEN 1 ELSE 0 END) = 1 THEN 'Bike-first'
 		ELSE 'Accessory/Clothing-first'
@@ -66,7 +69,7 @@ WITH first_orders AS (
 	AND f.order_date = fo.first_order_date
 	LEFT JOIN gold.dim_products p
 	ON f.product_key = p.product_key
-	GROUP BY fo.customer_key, fo.first_order_date)
+	GROUP BY fo.customer_key, fo.first_order_date, fo.total_orders, fo.total_revenue)
 ,
 later_bike AS (
 	SELECT DISTINCT e.customer_key
@@ -86,13 +89,14 @@ END AS join_period,
 e.entry_type,
 COUNT(*) AS customers,
 COUNT(lb.customer_key) AS later_bought_bike,
-ROUND(100.0 * COUNT(lb.customer_key) / COUNT(*), 1) AS pct_later_bought_bike
+ROUND(100.0 * COUNT(lb.customer_key) / COUNT(*), 1) AS pct_later_bought_bike,
+ROUND(100.0 * COUNT(*) FILTER (WHERE e.total_orders > 1) / COUNT(*), 1) AS pct_repeat_any,   
+ROUND(AVG(e.total_revenue), 2) AS avg_revenue_per_customer                                      
 FROM entry e
 LEFT JOIN later_bike lb
 ON e.customer_key = lb.customer_key
 GROUP BY join_period, e.entry_type
 ORDER BY join_period, e.entry_type;
-
 
 
 

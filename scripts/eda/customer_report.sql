@@ -3,7 +3,7 @@
 Customer Report
 ===============================================================================
 Purpose:
-    - This report consolidates key customer metrics and behaviors
+    - This report consolidates key customer metrics and behaviours
 
 Highlights:
     1. Gathers essential fields such as names, ages, and transaction details.
@@ -20,7 +20,7 @@ Highlights:
 		- average monthly spend
 ===============================================================================
 */
-DROP VIEW gold.report_customers;
+DROP VIEW IF EXISTS gold.report_customers;
 CREATE VIEW gold.report_customers AS 
 --Base Query: Retrieves core columns from tables
 WITH base_query AS (
@@ -33,7 +33,7 @@ WITH base_query AS (
 	c.customer_key,
 	c.customer_number,
 	CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
-	EXTRACT(YEAR FROM AGE(CURRENT_DATE, c.birth_date)) AS age
+	EXTRACT(YEAR FROM AGE((SELECT MAX(order_date) FROM gold.fact_sales), c.birth_date)) AS age
 	FROM gold.fact_sales f
 	LEFT JOIN gold.dim_customers  c
 	ON c.customer_key = f.customer_key
@@ -41,7 +41,7 @@ WITH base_query AS (
 
 	
 
--- Customer Aggregations: Summarizes key metrics at the customer level
+-- Customer Aggregations: Summarises key metrics at the customer level
 	,customer_aggregations AS 
 	(SELECT 
 	customer_key,
@@ -72,6 +72,7 @@ CASE
 	 WHEN age between 20 and 29 THEN '20-29'
 	 WHEN age between 30 and 39 THEN '30-39'
 	 WHEN age between 40 and 49 THEN '40-49'
+	 WHEN age IS NULL THEN 'Unknown'
 	 ELSE '50 and above'
 END AS age_group,
 CASE 
@@ -80,7 +81,7 @@ CASE
     ELSE 'New'
 END AS customer_segment,
 last_order_date,
-EXTRACT (YEAR FROM AGE(CURRENT_DATE,last_order_date))*12 + EXTRACT (month FROM AGE(CURRENT_DATE,last_order_date)) AS recency,
+EXTRACT (YEAR FROM AGE((SELECT MAX(order_date) FROM gold.fact_sales),last_order_date))*12 + EXTRACT (month FROM AGE((SELECT MAX(order_date) FROM gold.fact_sales),last_order_date)) AS recency,
 total_orders,
 total_sales,
 total_quantity,
@@ -88,11 +89,11 @@ total_products,
 lifespan,
 --avg order value
 CASE WHEN total_orders = 0 THEN 0
-	 ELSE total_sales / total_orders
+	 ELSE ROUND(1.0 * total_sales / total_orders, 2)
 END AS avg_order_value,
 --avg monthly spend
 CASE WHEN lifespan = 0 THEN total_sales
-     ELSE ROUND(total_sales / lifespan,2)
+     ELSE ROUND(1.0 * total_sales / lifespan,2)
 END AS avg_monthly_spend
-FROM customer_aggregations
+FROM customer_aggregations;
 

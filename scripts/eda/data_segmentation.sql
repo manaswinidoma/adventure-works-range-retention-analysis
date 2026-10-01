@@ -1,5 +1,24 @@
---Group the data based on a specific range
---Helps to understand the correlation between two measures.
+/*
+===============================================================================
+Data Segmentation
+===============================================================================
+Purpose:
+    - Groups products into cost ranges and customers into spending segments,
+      and compares one-time buyers with repeat buyers.
+Definitions:
+    - VIP: at least 12 months of purchase history and spend over $5,000.
+    - Regular: at least 12 months of history and spend of $5,000 or less.
+    - New: less than 12 months of purchase history.
+    - One-time buyer: exactly one order; Repeat buyer: two or more orders.
+Tables used:
+    - gold.fact_sales
+    - gold.dim_products
+    - gold.dim_customers
+Notes:
+    - Customer queries exclude order lines with invalid (NULL) order dates.
+    - All monetary values are in US dollars (USD).
+===============================================================================
+*/
 
 --Segment products into cost ranges and 
 --count how many products fall into each segment.
@@ -21,10 +40,10 @@ cost_range,
 COUNT(product_key) As total_products
 FROM product_segment
 GROUP BY cost_range 
-ORDER BY total_products DESC
+ORDER BY total_products DESC;
 
 
---Group customers into three segments based on their spending behavior:   
+--Group customers into three segments based on their spending behaviour:   
 --	VIP: at least 12 months of history and spending more than $5,000.   
 --	Regular: at least 12 months of history but spending $5,000 or less.   
 --	New: lifespan less than 12 months.
@@ -53,7 +72,7 @@ CASE
 	WHEN lifespan >= 12 AND total_spending <= 5000 THEN 'Regular'
 	ELSE 'New'
 END customer_segment
-FROM customer_spending
+FROM customer_spending;
 
 
 --Total number of customers by each group.
@@ -86,7 +105,7 @@ FROM
 	END customer_segment
 	FROM customer_spending) t
 GROUP BY customer_segment
-ORDER BY revenue DESC
+ORDER BY revenue DESC;
 
 
 -- One-time vs repeat buyers

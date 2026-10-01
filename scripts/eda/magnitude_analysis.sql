@@ -1,3 +1,21 @@
+/*
+===============================================================================
+Magnitude Analysis
+===============================================================================
+Purpose:
+    - Compares measures across dimensions: customers by country and gender,
+      products and average cost by category, revenue by category and customer,
+      and items sold by country.
+Tables used:
+    - gold.fact_sales
+    - gold.dim_products
+    - gold.dim_customers
+Notes:
+    - Revenue totals include every order line, including the 19 lines with
+      invalid order dates.
+===============================================================================
+*/
+
 --Find the total customers by country
 SELECT 
 	country, 
