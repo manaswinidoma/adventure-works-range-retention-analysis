@@ -1,0 +1,11 @@
+--Sales Performance over time
+SELECT
+	CAST(DATE_TRUNC('month', order_date) AS DATE) AS month_date,
+	COUNT(DISTINCT customer_key) AS total_customers,
+	SUM(quantity) AS total_quantity,
+ 	SUM(sales_amount) AS total_sales
+FROM gold.fact_sales
+WHERE order_date IS NOT NULL
+GROUP BY CAST(DATE_TRUNC('month', order_date) AS DATE) 
+ORDER BY 1
+
