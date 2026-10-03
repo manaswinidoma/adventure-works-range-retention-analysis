@@ -101,3 +101,82 @@ ORDER BY join_period, e.entry_type;
 
 
 
+--Fair comparison: repeat rate within a fixed window after the first order
+--Only customers with the full window before the data ends are included.
+--Change window_months to test other windows (12 months leaves too few
+--post-range customers to compare reliably).
+WITH params AS (
+	SELECT
+		6 AS window_months,
+		MAX(order_date) AS last_data_date
+	FROM gold.fact_sales
+)
+
+--Each customer's first purchase day
+, first_orders AS (
+	SELECT
+		customer_key,
+		MIN(order_date) AS first_order_date
+	FROM gold.fact_sales
+	WHERE order_date IS NOT NULL
+	GROUP BY customer_key
+)
+
+--Label each customer by what they bought on their first day
+, entry AS (
+	SELECT
+		fo.customer_key,
+		fo.first_order_date,
+		CASE
+			WHEN MAX(CASE WHEN p.category = 'Bikes' THEN 1 ELSE 0 END) = 1 THEN 'Bike-first'
+			ELSE 'Accessory/Clothing-first'
+		END AS entry_type
+	FROM first_orders fo
+	JOIN gold.fact_sales f
+		ON f.customer_key = fo.customer_key
+		AND f.order_date = fo.first_order_date
+	LEFT JOIN gold.dim_products p
+		ON f.product_key = p.product_key
+	GROUP BY fo.customer_key, fo.first_order_date
+)
+
+--Keep only customers who had the full window before the data ends
+, eligible AS (
+	SELECT e.*
+	FROM entry e
+	CROSS JOIN params pr
+	WHERE e.first_order_date + MAKE_INTERVAL(months => pr.window_months) <= pr.last_data_date
+)
+
+--Customers who ordered again within the window, and whether that included a bike
+, returns AS (
+	SELECT
+		el.customer_key,
+		MAX(CASE WHEN p.category = 'Bikes' THEN 1 ELSE 0 END) AS returned_for_bike
+	FROM eligible el
+	CROSS JOIN params pr
+	JOIN gold.fact_sales f
+		ON f.customer_key = el.customer_key
+	LEFT JOIN gold.dim_products p
+		ON f.product_key = p.product_key
+	WHERE f.order_date > el.first_order_date
+	  AND f.order_date <= el.first_order_date + MAKE_INTERVAL(months => pr.window_months)
+	GROUP BY el.customer_key
+)
+
+SELECT
+	CASE
+		WHEN el.first_order_date < '2012-12-28' THEN 'Joined before range'
+		ELSE 'Joined after range'
+	END AS join_period,
+	el.entry_type,
+	COUNT(*) AS customers,
+	COUNT(r.customer_key) AS returned_within_window,
+	ROUND(100.0 * COUNT(r.customer_key) / COUNT(*), 1) AS pct_returned_within_window,
+	COUNT(*) FILTER (WHERE r.returned_for_bike = 1) AS bought_bike_within_window,
+	ROUND(100.0 * COUNT(*) FILTER (WHERE r.returned_for_bike = 1) / COUNT(*), 1) AS pct_bought_bike_within_window
+FROM eligible el
+LEFT JOIN returns r
+	ON el.customer_key = r.customer_key
+GROUP BY join_period, el.entry_type
+ORDER BY join_period, el.entry_type;
