@@ -45,6 +45,8 @@ Adventure Works Cycles is a bicycle manufacturer selling directly to consumers i
 
 ## Insights
 
+*Explore every chart below interactively on [Tableau Public](https://public.tableau.com/views/adventure-works-range-retention-analysis/Revenue).*
+
 ### 1. Bikes carry the business, and even the 2013 growth came from bikes
 
 Bikes generated **96.46%** of the **$29.36M** total revenue (Accessories 2.39%, Clothing 1.16%). Until late December 2012, bikes were the only products customers bought.
