@@ -52,10 +52,12 @@ Revenue nearly tripled in 2013 (+$10.5M), and **bikes drove 90.6% of that growth
 
 This is a price gap rather than a demand problem. Even strong add-on sales barely move the revenue mix, so the business and its growth still depend on bike volume, and the bike customer base is the asset to protect.
 
-<p align="center">
-  <img src="tableau/revenue.png" alt="Revenue by year and product group, 2011–2013" height="285">
-  <img src="tableau/units_vs_revenue.png" alt="2013 share of units vs share of revenue" height="285">
-</p>
+<table>
+  <tr>
+    <td width="50%"><img src="tableau/revenue.png" alt="Revenue by year and product group, 2011–2013" width="100%"></td>
+    <td width="50%"><img src="tableau/units_vs_revenue.png" alt="2013 share of units vs share of revenue" width="100%"></td>
+  </tr>
+</table>
 
 <details>
 <summary>See the numbers</summary>
@@ -87,10 +89,12 @@ The same pattern shows in buying behaviour: the **37.14%** of customers who orde
 
 The high one-time rate most likely reflects how recently most customers joined, not falling loyalty. Measured over the same 6 months, bike buyers who joined after the range came back at about the same rate as earlier bike buyers (**3.5% vs 4.0%**). Keeping customers, and giving them reasons to come back between bike purchases, is worth far more than winning new one-off buyers.
 
-<p align="center">
-  <img src="tableau/customer_segment.png" alt="Share of customers vs share of revenue by customer segment" height="286">
-  <img src="tableau/repeat_vs_onetime_buyer.png" alt="Share of customers vs share of revenue: repeat vs one-time buyers" height="286">
-</p>
+<table>
+  <tr>
+    <td width="50%"><img src="tableau/customer_segment.png" alt="Share of customers vs share of revenue by customer segment" width="100%"></td>
+    <td width="50%"><img src="tableau/repeat_vs_onetime_buyer.png" alt="Share of customers vs share of revenue: repeat vs one-time buyers" width="100%"></td>
+  </tr>
+</table>
 
 <details>
 <summary>See the numbers</summary>
@@ -117,10 +121,12 @@ Comparing every customer over the same 6 months after their first order, the pat
 
 The value gap is large. An accessory-first customer spent **$67.59** on average; a bike-first customer who joined in the same period spent **$1,443.62**, about **21× more**.
 
-<p align="center">
-  <img src="tableau/return_rate_6.png" alt="Return rate within 6 months by join period and entry type" height="266">
-  <img src="tableau/revenue_per_customer.png" alt="Revenue per customer: bike-first vs accessory-first customers who joined after 28 Dec 2012" height="266">
-</p>
+<table>
+  <tr>
+    <td width="50%"><img src="tableau/return_rate_6.png" alt="Return rate within 6 months by join period and entry type" width="100%"></td>
+    <td width="50%"><img src="tableau/revenue_per_customer.png" alt="Revenue per customer: bike-first vs accessory-first customers who joined after 28 Dec 2012" width="100%"></td>
+  </tr>
+</table>
 
 *A perfect 0% may partly reflect how the AdventureWorks sample data was generated, so it is a finding about this dataset rather than a rule of customer behaviour.*
 
@@ -159,15 +165,19 @@ Read the other way round, the picture is different. Even the most popular add-on
 
 Bike buyers kit out a new bike at the point of purchase, but almost never come back for accessories later: only $60 of their add-on spend happened outside a bike order. The range adds value by **raising the value of each bike sale**, not by bringing in future bike buyers, and at about $1.04M in total it remains small next to $28.3M from bikes.
 
-<p align="center">
-  <img src="tableau/attach_bike_type.png" alt="Attach rate by bike type" height="252">
-  <img src="tableau/attach_rate_trend.png" alt="Monthly bike orders and attach rate, Dec 2012 to Dec 2013" height="252">
-</p>
+<table>
+  <tr>
+    <td width="50%"><img src="tableau/attach_bike_type.png" alt="Attach rate by bike type" width="100%"></td>
+    <td width="50%"><img src="tableau/attach_rate_trend.png" alt="Monthly bike orders and attach rate, Dec 2012 to Dec 2013" width="100%"></td>
+  </tr>
+</table>
 
-<p align="center">
-  <img src="tableau/top_add-ons.png" alt="Top 10 add-ons by orders, and share bought with a bike" height="248">
-  <img src="tableau/Add-on_revenue_by_order_type.png" alt="Add-on revenue by whether the order included a bike" height="248">
-</p>
+<table>
+  <tr>
+    <td width="50%"><img src="tableau/top_add-ons.png" alt="Top 10 add-ons by orders, and share bought with a bike" width="100%"></td>
+    <td width="50%"><img src="tableau/Add-on_revenue_by_order_type.png" alt="Add-on revenue by whether the order included a bike" width="100%"></td>
+  </tr>
+</table>
 
 <details>
 <summary>See the numbers</summary>
