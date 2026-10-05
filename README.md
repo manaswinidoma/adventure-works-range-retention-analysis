@@ -2,14 +2,6 @@
 
 *Did a new accessories range bring in future bike buyers? An end-to-end project from raw data to a PostgreSQL warehouse, SQL analysis, Tableau dashboards and recommendations.*
 
-**Tools:** PostgreSQL · PL/pgSQL · SQL window functions · draw.io · Tableau Public
-**Data:** AdventureWorks sample data (CRM + ERP CSV exports), orders from 29 Dec 2010 to 28 Jan 2014. All monetary values are in US dollars (USD).
-
-**Skills demonstrated**
-- **Data engineering:** medallion data warehouse (bronze → silver → gold), star schema design, PL/pgSQL ETL procedures, data cleaning and quality checks across CRM and ERP sources.
-- **Advanced SQL & analytics:** CTEs, window functions, conditional aggregation and anti-joins for customer segmentation, cohort and fixed-window retention analysis, and cross-sell (attach rate) analysis.
-- **Visualisation & storytelling:** Tableau dashboards with action titles, a stakeholder-framed business problem, North Star metrics and prioritised recommendations.
-
 ---
 
 ## Background and Overview
