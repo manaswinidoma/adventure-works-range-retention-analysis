@@ -98,3 +98,28 @@ GROUP BY 1
 ORDER BY add_on_revenue DESC;
 
 
+-- 4. Monthly attach rate (supports the trend chart)
+-- Monthly bike attach rate since Accessories & Clothing started selling (28 Dec 2012)
+WITH order_flags AS (
+    SELECT
+        f.order_number,
+        DATE_TRUNC('month', MIN(f.order_date))::date             AS order_month,
+        MAX(CASE WHEN p.category = 'Bikes' THEN 1 ELSE 0 END)     AS has_bike,
+        MAX(CASE WHEN p.category IN ('Accessories', 'Clothing')
+                 THEN 1 ELSE 0 END)                               AS has_add_on
+    FROM gold.fact_sales f
+    JOIN gold.dim_products p
+        ON f.product_key = p.product_key
+    WHERE f.order_date >= DATE '2012-12-28'
+    GROUP BY f.order_number
+)
+SELECT
+    order_month,
+    SUM(has_bike)                                             AS bike_orders,
+    SUM(CASE WHEN has_bike = 1 AND has_add_on = 1 THEN 1 ELSE 0 END)
+                                                              AS bike_orders_with_add_on,
+    ROUND(100.0 * SUM(CASE WHEN has_bike = 1 AND has_add_on = 1 THEN 1 ELSE 0 END)
+          / NULLIF(SUM(has_bike), 0), 1)                      AS attach_rate_pct
+FROM order_flags
+GROUP BY order_month
+ORDER BY order_month;

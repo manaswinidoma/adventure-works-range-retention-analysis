@@ -38,7 +38,7 @@ Adventure Works Cycles is a bicycle manufacturer selling directly to consumers i
 - **The new range did not create bike buyers.** **None of the 9,350** customers whose first purchase was an accessory or clothing item went on to buy a bike. They spent **$67.59** each on average, against **$1,443.62** for bike-first customers who joined in the same period.
 - **It works well as an add-on.** **87.6%** of bike orders include an accessory or clothing item, adding **$47.62** per order, and the rate held at 86–89% every month of 2013 while bike orders more than doubled.
 
-**Recommendation:** stop treating Accessories & Clothing as a way to win new customers. Invest in keeping bike buyers and in selling add-ons at the point of the bike purchase.
+**Recommendation:** **Stop treating Accessories & Clothing as a way to win new customers. Invest in keeping bike buyers and in selling add-ons at the point of the bike purchase.**
 
 ---
 
@@ -50,7 +50,7 @@ Bikes generated **96.46%** of the **$29.36M** total revenue (Accessories 2.39%, 
 
 Revenue nearly tripled in 2013 (+$10.5M), and **bikes drove 90.6% of that growth**. The business sold almost three times as many bikes (+196.8%) at a lower average price. The new range has not changed the picture: in 2013 add-ons made up **81.6% of units sold but only 6.06% of revenue**, because a bike earned $1,582.20 per unit against $23.00 for an add-on.
 
-This is a price gap rather than a demand problem. Even strong add-on sales barely move the revenue mix, so the business and its growth still depend on bike volume, and the bike customer base is the asset to protect.
+**This is a price gap rather than a demand problem. Even strong add-on sales barely move the revenue mix, so the business and its growth still depend on bike volume, and the bike customer base is the asset to protect.**
 
 <table>
   <tr>
@@ -81,13 +81,13 @@ This is a price gap rather than a demand problem. Even strong add-on sales barel
 *Source: `part_to_whole_analysis.sql`*
 </details>
 
-### 2. 8.75% of customers generate 35.94% of revenue, while 62.86% bought only once
+### 2. Lose a VIP and you lose the revenue of about 8 new customers
 
-Revenue is concentrated in a small, loyal group. **VIP customers** (12+ months of history and over $5,000 spent) are **8.75%** of customers but bring in **35.94%** of revenue, about $6,524 each. New customers are 80.22% of the base but earn 40.18% of revenue, about $796 each.
+Revenue is concentrated in a small, loyal group. **VIP customers** (12+ months of history and over $5,000 spent) are **8.75%** of customers but bring in **35.94%** of revenue, about $6,524 each. New customers are 80.22% of the base but earn 40.18% of revenue, about $796 each. Each VIP is worth about 8 new customers.
 
-The same pattern shows in buying behaviour: the **37.14%** of customers who ordered more than once generate **77.01%** of revenue.
+The same pattern shows in buying behaviour: the **37.14%** of customers who ordered more than once generate **77.01%** of revenue, while the 62.86% who have bought only once bring in the rest.
 
-The high one-time rate most likely reflects how recently most customers joined, not falling loyalty. Measured over the same 6 months, bike buyers who joined after the range came back at about the same rate as earlier bike buyers (**3.5% vs 4.0%**). Keeping customers, and giving them reasons to come back between bike purchases, is worth far more than winning new one-off buyers.
+The high one-time rate most likely reflects how recently most customers joined, not falling loyalty. Measured over the same 6 months, bike buyers who joined after the range came back at about the same rate as earlier bike buyers (**3.5% vs 4.0%**). **Keeping customers, and giving them reasons to come back between bike purchases, is worth far more than winning new one-off buyers.**
 
 <table>
   <tr>
@@ -117,7 +117,7 @@ The high one-time rate most likely reflects how recently most customers joined, 
 
 Since Accessories & Clothing started selling, **9,350** customers made an accessory or clothing item their first purchase. In this dataset, **none of them went on to buy a bike**. About 1 in 5 (19.9%) came back, only to buy more accessories.
 
-Comparing every customer over the same 6 months after their first order, the pattern holds: **20.6%** of accessory-first customers came back and **0%** bought a bike. Bike buyers who came back almost always did so for another bike. The two groups behave as separate markets: the range most likely attracts people buying gear rather than future bike buyers.
+Comparing every customer over the same 6 months after their first order, the pattern holds: **20.6%** of accessory-first customers came back and **0%** bought a bike. Bike buyers who came back almost always did so for another bike. The two groups behave as separate markets:**the range most likely attracts people buying gear rather than future bike buyers.**
 
 The value gap is large. An accessory-first customer spent **$67.59** on average; a bike-first customer who joined in the same period spent **$1,443.62**, about **21× more**.
 
@@ -239,22 +239,6 @@ Expected impact is described qualitatively; no query estimated future results.
 
 ---
 
-## Dashboard
-
-[TODO: dashboard screenshot and Tableau Public link]
-
-The Tableau workbook (`tableau/dw.twbx`) is built on three report views exported to CSV:
-
-| View | Grain | Rows | Script |
-|---|---|---|---|
-| `gold.report_customers` | One row per customer | 18,482 | `scripts/eda/customer_report.sql` |
-| `gold.report_products` | One row per product sold | 130 | `scripts/eda/product_report.sql` |
-| `gold.report_sales` | One row per order line | 60,379 | `scripts/eda/sales_report.sql` |
-
-All three views exclude undated order lines and total $29,351,258 in sales.
-
----
-
 ## Appendix: Technical Details
 
 ### A. Metric definitions
@@ -295,7 +279,22 @@ All three views exclude undated order lines and total $29,351,258 in sales.
 | Q3 | `range_expansion_analysis.sql` |
 | Q4 | `attach_rate.sql`, `product_report.sql` |
 
-### B. Data warehouse architecture
+### B. Assumptions and caveats
+
+**Assumptions**
+- **Range start date:** Accessories & Clothing are treated as starting on **28 Dec 2012**, their first recorded sale. They appear in the catalogue earlier, so this is not called a launch.
+- **Currency:** all amounts are in US dollars (USD), the base currency of the AdventureWorks sample data.
+- **"Today":** recency, age and time windows are measured from the last order date (**28 Jan 2014**), not the current date.
+- **Entry type:** a customer is bike-first if a bike was bought on their first purchase day, and accessory/clothing-first otherwise.
+- **Segment thresholds:** VIP and Regular need at least 12 months of purchase history, split at $5,000 total spend. These are analyst choices, not company definitions.
+- **Revenue, not profit:** product cost is not used, so no figure describes margin or profit.
+
+**Caveats**
+- **Limited time after the range:** the data ends 13 months after the range started, so post-range customers had less time to return than earlier ones (about 13 vs up to 37 months). The 6-month window is the fair comparison, and post-range results are early signals.
+- **Sample data, not real company records:** AdventureWorks is a sample dataset created by Microsoft for practice, not real sales. The results are accurate for this data, but real customers rarely behave so neatly; for example, a real business would be unlikely to see exactly 0 of 9,350 accessory-first customers go on to buy a bike.
+- **Interpretations, not proven causes:** explanations such as bike buyers kitting out a new bike or tyre tubes being bought as replacements are readings of the patterns, not tested causes.
+
+### C. Data warehouse architecture
 
 ![High-level architecture](docs/data_architechture.png)
 
@@ -319,7 +318,7 @@ All three views exclude undated order lines and total $29,351,258 in sales.
 
 Full column definitions: [`docs/data_catalog.md`](docs/data_catalog.md)
 
-### C. Data sources
+### D. Data sources
 
 | System | File | Rows | Contents |
 |---|---|---|---|
@@ -332,7 +331,7 @@ Full column definitions: [`docs/data_catalog.md`](docs/data_catalog.md)
 
 Row counts are raw file rows, excluding the header.
 
-### D. Data quality and cleaning
+### E. Data quality and cleaning
 
 | Issue found | Fix applied (silver layer) |
 |---|---|
@@ -360,76 +359,13 @@ Row counts are raw file rows, excluding the header.
 
 Quality checks: [`tests/quality_checks_silver.sql`](tests/quality_checks_silver.sql), [`tests/quality_checks_gold.sql`](tests/quality_checks_gold.sql)
 
-### E. Repository structure
-
-```
-sql-data-warehouse-project/
-├── datasets/
-│   ├── source_crm/          # CRM CSV exports
-│   └── source_erp/          # ERP CSV exports
-├── docs/                    # Architecture diagrams and data catalog
-├── scripts/
-│   ├── init_database.sql    # Creates database and schemas
-│   ├── bronze/              # Raw load DDL and procedure
-│   ├── silver/              # Cleaning DDL and procedure
-│   ├── gold/                # Star schema views
-│   └── eda/                 # Analysis queries and Tableau report views
-│       ├── range_expansion_analysis.sql   # Q3
-│       ├── attach_rate.sql                # Q4
-│       ├── customer_report.sql            # gold.report_customers
-│       ├── product_report.sql             # gold.report_products
-│       └── sales_report.sql               # gold.report_sales
-├── tests/                   # Data quality checks
-├── tableau/                 # Report view CSV exports, Tableau workbook (dw.twbx) and chart images
-├── results/                 # Saved query outputs
-└── README.md
-```
-
-### F. How to run
-
-**Prerequisites:** PostgreSQL [TODO: version], `psql` or pgAdmin
-
-```bash
-# 1. Create database and schemas
-psql -U postgres -f scripts/init_database.sql
-
-# 2. Create tables
-psql -U postgres -d DataWarehouse -f scripts/bronze/ddl_bronze.sql
-psql -U postgres -d DataWarehouse -f scripts/silver/ddl_silver.sql
-
-# 3. Create load procedures
-psql -U postgres -d DataWarehouse -f scripts/bronze/proc_load_bronze.sql
-psql -U postgres -d DataWarehouse -f scripts/silver/proc_load_silver.sql
-
-# 4. Load data
-psql -U postgres -d DataWarehouse -c "CALL bronze.load_bronze();"
-psql -U postgres -d DataWarehouse -c "CALL silver.load_silver();"
-
-# 5. Build gold views
-psql -U postgres -d DataWarehouse -f scripts/gold/ddl_gold.sql
-
-# 6. Build the Tableau report views (report_customers must come before report_sales)
-psql -U postgres -d DataWarehouse -f scripts/eda/customer_report.sql
-psql -U postgres -d DataWarehouse -f scripts/eda/product_report.sql
-psql -U postgres -d DataWarehouse -f scripts/eda/sales_report.sql
-```
-
-`proc_load_bronze.sql` loads the CSVs from absolute file paths; update them to where you cloned the repository before step 4.
-
-### G. Next steps
-
-- **Longer retention window:** re-run the repeat-rate comparison at 12 months once more post-range data is available (today too few post-range customers have a full 12 months).
-- **Test the add-on strategy:** measure whether checkout bundles raise add-on revenue per bike order above the $47.62 baseline.
-- **Incremental loads:** replace full truncate-and-insert loads with incremental loads for the sales table.
-- **Portability:** replace hard-coded file paths in `proc_load_bronze.sql` with a configurable path, and fix `init_database.sql` so the schemas are created inside `DataWarehouse`.
-
----
-
 ## Acknowledgements
 
-Dataset derived from Microsoft's AdventureWorks sample database. [TODO: credit any course or tutorial that informed the project structure.]
+Dataset derived from Microsoft's AdventureWorks sample database. 
 
 ## About Me
 
-**Manaswini Doma** · Master of IT (Data Analytics), UTS Sydney
-[TODO: LinkedIn] · [TODO: Portfolio] · [TODO: Email]
+**Manaswini Doma**
+
+[https://www.linkedin.com/in/domamanaswini/](https://www.linkedin.com/in/domamanaswini/) · 
+[domamanaswini@gmail.com](mailto:domamanaswini@gmail.com)
