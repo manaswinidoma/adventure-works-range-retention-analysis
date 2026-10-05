@@ -1,6 +1,7 @@
 # Adventure Works Cycles: Product Range & Customer Retention Analysis
 
 *Did a new accessories range bring in future bike buyers? An end-to-end project from raw data to a PostgreSQL warehouse, SQL analysis, Tableau dashboards and recommendations.*
+<img width="1024" height="339" alt="image" src="https://github.com/user-attachments/assets/0d13301d-3fe0-4143-9240-cd86e5e7b154" />
 
 ---
 
